@@ -15,6 +15,7 @@ contract MysteryBox is Ownable {
     mapping (uint256 => Box) boxes;
     mapping (uint256 => address) tokenOwners;
 
+    event BoxCreated(uint256 boxId);
     event BoxBought(address buyer, uint256 boxId, uint256 tokenId);
 
     struct Box {
@@ -45,7 +46,7 @@ contract MysteryBox is Ownable {
         uint256 _endTime,
         uint256 _synPrice,
         uint256 _esyncPrice
-    ) public onlyOwner returns (uint256) {
+    ) public onlyOwner {
         Box storage box = boxes[_boxId.current()];
         box.id = _boxId.current();
         box.startTime = _startTime;
@@ -58,7 +59,7 @@ contract MysteryBox is Ownable {
 
         _boxId.increment();
 
-        return box.id;
+        emit BoxCreated(box.id);
     }
 
     function buy(uint256 boxId, bool useSynToken) public {
