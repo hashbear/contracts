@@ -11,6 +11,7 @@ contract MysteryBox is Ownable {
 
     address public synTokenAddress;
     address public esynTokenAddress;
+    address public paymentReceiver;
 
     mapping (uint256 => Box) boxes;
     mapping (uint256 => address) tokenOwners;
@@ -29,9 +30,10 @@ contract MysteryBox is Ownable {
         uint256 curAvailableTokenId;
     }
 
-    constructor(address _synTokenAddress, address _esynTokenAddress) {
+    constructor(address _synTokenAddress, address _esynTokenAddress, address _paymentReceiver) {
         synTokenAddress = _synTokenAddress;
         esynTokenAddress = _esynTokenAddress;
+        paymentReceiver = _paymentReceiver;
 
         _boxId.increment(); //so boxId will start from 1
     }
@@ -82,9 +84,9 @@ contract MysteryBox is Ownable {
         box.curAvailableTokenId += 1;
 
         if (useSynToken && box.synPrice > 0) {
-            require(IERC20(synTokenAddress).transferFrom(msg.sender, address(this), box.synPrice), "unable to transfer syn tokens");
+            require(IERC20(synTokenAddress).transferFrom(msg.sender, paymentReceiver, box.synPrice), "unable to transfer syn tokens");
         } else if (box.esyncPrice > 0) {
-            require(IERC20(esynTokenAddress).transferFrom(msg.sender, address(this), box.synPrice), "unable to transfer esyn tokens");
+            require(IERC20(esynTokenAddress).transferFrom(msg.sender, paymentReceiver, box.synPrice), "unable to transfer esyn tokens");
         }
 
         emit BoxBought(msg.sender, boxId, box.curAvailableTokenId - 1);
