@@ -38,6 +38,10 @@ contract MysteryBox is Ownable {
         _boxId.increment(); //so boxId will start from 1
     }
 
+    function updatePaymentReceiver(address _paymentReceiver) public onlyOwner {
+        paymentReceiver = _paymentReceiver;
+    }
+
 //    The assumption is that tokens are generated in advance in database, but not revealed yet. When user buy token, he gets tokenid, but does not know what items he gets.
 //    After all items are sold or available time finished, we update data in database and show what assets user got.
 //    For example mystery box has 100 items. Then we can generate 100 items in db, for example from 0x288eff3b977db1a75833078f8efe8a5dced20bde2887105485676b2c43f1259f till 0x288eff3b977db1a75833078f8efe8a5dced20bde2887105485676b2c43f1259f+100
